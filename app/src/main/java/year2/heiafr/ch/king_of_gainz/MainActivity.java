@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        //TODO : check if profile has been set up
 
 
         if(isProfileSetUp) {

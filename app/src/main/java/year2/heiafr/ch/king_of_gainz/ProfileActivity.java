@@ -1,9 +1,5 @@
 package year2.heiafr.ch.king_of_gainz;
 
-import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -27,6 +23,9 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_set_up_profile);
 
         //Get all attributes
         age = findViewById(R.id.txtAge);
@@ -35,21 +34,21 @@ public class ProfileActivity extends AppCompatActivity {
         weight = findViewById(R.id.txtWeight);
         activitySpinner = findViewById(R.id.spinnerActivity);
 
-        //Remove title bar
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setUpSpinners();
+    }
 
-        //Set up spinners
-        ArrayAdapter<CharSequence> adapterSex = ArrayAdapter.createFromResource(this,
-                R.array.sex, android.R.layout.simple_spinner_item);
-        adapterSex.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    private void setUpSpinners() {
+        String[] itemsSex = new String[]{"Male", "Female"};
+        ArrayAdapter<String> adapterSex = new ArrayAdapter<String>(this, R.layout.custom_spinner_dropdown_item, itemsSex);
         spinnerSex.setAdapter(adapterSex);
 
-        ArrayAdapter<CharSequence> adapterActivity = ArrayAdapter.createFromResource(this,
-                R.array.activity, android.R.layout.simple_spinner_item);
-        adapterActivity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSex.setAdapter(adapterActivity);
-
-        setContentView(R.layout.activity_set_up_profile);
+        String[] itemsActivity = new String[]{"Lightly Active (moderate exercise and sedentary job)",
+                "Moderately Active (intense exercise and sedentary job)",
+                "Very Active (moderate exercise and active job)",
+                "Extra Active (intense exercise and active job)"
+        };
+        ArrayAdapter<String> adapterActivity = new ArrayAdapter<String>(this, R.layout.custom_spinner_dropdown_item, itemsActivity);
+        activitySpinner.setAdapter(adapterActivity);
     }
 
     public void savePressed(View target){
