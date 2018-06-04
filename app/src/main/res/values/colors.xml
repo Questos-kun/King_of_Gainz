@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBackground">#2a2a2a</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="electricBlue">#0892D0</color>
+    <color name="highlightedYellow">#FFFF00</color>
+    <color name="vibrantRed">#FF0000</color>
+    <color name="limeGreen">#00FF00</color>
 </resources>

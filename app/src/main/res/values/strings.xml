@@ -5,7 +5,6 @@
     <string name="height">Height (cm)</string>
     <string name="weight">Weight (kg)</string>
     <string name="activity">Activity</string>
-    <string name="edit_profile">Edit Profile</string>
     <string name="save">Save</string>
     <string-array name="sex">
         <item>Male</item>
@@ -17,4 +16,8 @@
         <item>Very Active (moderate exercise and active job)</item>
         <item>Extra Active (intense exercise and active job)</item>
     </string-array>
+    <string name="add_meal_activity">Add Meal / Activity</string>
+    <string name="stats">Stats</string>
+    <string name="about">About</string>
+    <string name="edit_profile">Edit Profile</string>
 </resources>
