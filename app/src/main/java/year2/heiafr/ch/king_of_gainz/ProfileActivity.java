@@ -22,6 +22,8 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText etWeight;
     private Spinner spinnerActivity;
 
+    private int profileId;
+
     public static final String SEX_MALE = "Male";
     public static final String SEX_FEMALE = "Female";
 
@@ -83,22 +85,22 @@ public class ProfileActivity extends AppCompatActivity {
                 if(mode == 1) {
                     mySQLiteHelper.addProfile(age, sex, height, weight, activity);
                 } else {
-                    int id = mySQLiteHelper.getProfileId(age, sex, height, weight, activity);
-                    mySQLiteHelper.modifyProfile(id, age, sex, height, weight, activity);
+                    mySQLiteHelper.modifyProfile(profileId, age, sex, height, weight, activity);
                 }
                 startActivity(new Intent(ProfileActivity.this, MainActivity.class));
             } else {
                 throw new Exception("impossible values");
             }
-
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Could not save profile, please check your values", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
     private void showCurrentProfile() {
         Profile currentProfile = mySQLiteHelper.getProfile();
-        etAge.setText(currentProfile.getAge());
+        profileId = currentProfile.getId();
+        etAge.setText(Integer.toString(currentProfile.getAge()));
         int sexSpinnerPosition = 0;
         switch(currentProfile.getSex()) {
             case SEX_MALE :
@@ -109,8 +111,8 @@ public class ProfileActivity extends AppCompatActivity {
                 break;
         }
         spinnerSex.setSelection(sexSpinnerPosition);
-        etHeight.setText(currentProfile.getHeight());
-        etWeight.setText(currentProfile.getWeight());
+        etHeight.setText(Integer.toString(currentProfile.getHeight()));
+        etWeight.setText(Integer.toString(currentProfile.getWeight()));
         int activitySpinnerPosition = 0;
         switch(currentProfile.getActivity()) {
             case ACTIVITY_LIGHT :

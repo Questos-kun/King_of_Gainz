@@ -53,7 +53,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     public boolean isProfileSetUp() {
         String columnName = "setUpProfile";
-        String query = "SELECT count(*) as AS " + columnName + " FROM " + TABLE_NAME;
+        String query = "SELECT count(*) as " + columnName + " FROM " + TABLE_NAME;
+        db = getWritableDatabase();
         cursor = db.rawQuery(query, null);
         cursor.moveToFirst();
         return cursor.getInt(cursor.getColumnIndexOrThrow(columnName)) > 0;
@@ -64,6 +65,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         cursor = db.rawQuery(query, null);
         cursor.moveToFirst();
         Profile currentProfile = new Profile(
+                cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)),
                 cursor.getInt(cursor.getColumnIndexOrThrow(KEY_AGE_COLUMN)),
                 cursor.getString(cursor.getColumnIndexOrThrow(KEY_SEX_COLUMN)),
                 cursor.getInt(cursor.getColumnIndexOrThrow(KEY_HEIGHT_COLUMN)),
@@ -91,19 +93,6 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         updatedValues.put(KEY_ACTIVITY_COLUMN, activity);
         String where = KEY_ID + "=" + id;
         db.update(TABLE_NAME, updatedValues, where, null);
-    }
-
-    public int getProfileId(int age, String sex, int height, int weight, String activity) {
-        int id;
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " +
-                KEY_AGE_COLUMN + " = ? AND " + KEY_SEX_COLUMN + " = ? AND " +
-                KEY_HEIGHT_COLUMN + " = ? AND " + KEY_HEIGHT_COLUMN + " = ? AND " +
-                KEY_ACTIVITY_COLUMN + " = ?";
-        cursor = db.rawQuery(query, new String[]{Integer.toString(age), sex,
-                Integer.toString(height), Integer.toString(weight), activity});
-        cursor.moveToFirst();
-        id = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID));
-        return id;
     }
 }
 

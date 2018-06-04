@@ -6,19 +6,23 @@ package year2.heiafr.ch.king_of_gainz;
 
 public class Profile {
 
+    private int id;
     private int age;
     private String sex;
     private int height;
     private int weight;
     private String activity;
 
-    public Profile(int age, String sex, int height, int weight, String activity) {
+    public Profile(int id, int age, String sex, int height, int weight, String activity) {
+        this.id = id;
         this.age = age;
         this.sex = sex;
         this.height = height;
         this.weight = weight;
         this.activity = activity;
     }
+
+    public int getId() { return id; }
 
     public int getAge() {
         return age;
