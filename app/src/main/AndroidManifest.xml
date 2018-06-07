@@ -22,6 +22,12 @@
             android:parentActivityName=".MainActivity"
             android:configChanges="orientation|screenSize">
         </activity>
+        <activity
+            android:name=".AddMealWorkoutActivity"
+            android:label="Add"
+            android:parentActivityName=".MainActivity"
+            android:configChanges="orientation|screenSize">
+        </activity>
     </application>
 
 </manifest>

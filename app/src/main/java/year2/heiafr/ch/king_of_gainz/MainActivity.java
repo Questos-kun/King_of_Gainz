@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addMealOrActivity(View view) {
+        Intent intent = new Intent(MainActivity.this, AddMealWorkoutActivity.class);
+        startActivity(intent);
     }
 
     public void openStats(View view) {
