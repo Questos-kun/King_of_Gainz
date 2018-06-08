@@ -43,7 +43,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String ACTIVITY_KEY_CARBOHYDRATE_COLUMN = "carbohydrate";
     public static final String ACTIVITY_TABLE_NAME = "Activity";
 
-    public static final String DATABASE_CREATE_ACTIVITY = "create table " + ACTIVITY_TABLE_NAME + " (" +
+    public static final String DATABASE_CREATE_ACTIVITY = "create table if not exists " + ACTIVITY_TABLE_NAME + " (" +
             ACTIVITY_KEY_ID + " integer primary key autoincrement, " +
             ACTIVITY_KEY_DATE_COLUMN + " text not null, " +
             ACTIVITY_KEY_TYPE_COLUMN + " text not null, " +
@@ -122,7 +122,35 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<Activity> getActivityForDate(String date) {
-        ArrayList<Activity> activitiesForTheDay = new ArrayList<>();
+        db.execSQL(DATABASE_CREATE_ACTIVITY);
+        ArrayList<Activity> activitiesForTheDay = new ArrayList<Activity>();
+        String[] result_column = new String[] {
+                ACTIVITY_KEY_ID,
+                ACTIVITY_KEY_DATE_COLUMN,
+                ACTIVITY_KEY_TYPE_COLUMN,
+                ACTIVITY_KEY_NAME_COLUMN,
+                ACTIVITY_KEY_QUANTITY_COLUMN,
+                ACTIVITY_KEY_CALORIES_COLUMN,
+                ACTIVITY_KEY_FAT_COLUMN,
+                ACTIVITY_KEY_PROTEIN_COLUMN,
+                ACTIVITY_KEY_CARBOHYDRATE_COLUMN
+        };
+        cursor = db.query(ACTIVITY_TABLE_NAME, result_column,
+                null,null,null,null,null);
+        while(cursor.moveToNext()) {
+            activitiesForTheDay.add(new Activity(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_DATE_COLUMN)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_TYPE_COLUMN)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_NAME_COLUMN)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_QUANTITY_COLUMN)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_CALORIES_COLUMN)),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_FAT_COLUMN)),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_PROTEIN_COLUMN)),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(ACTIVITY_KEY_CARBOHYDRATE_COLUMN))
+            ));
+        }
+        cursor.close();
         return activitiesForTheDay;
     }
 }

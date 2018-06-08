@@ -107,9 +107,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:background="@android:color/holo_green_light"
+                android:background="@color/limeGreen"
                 android:onClick="savePressed"
-                android:text="@string/save" />
+                android:text="@string/save"
+                android:textColor="@color/colorBackground"/>
 
         </RelativeLayout>
     </LinearLayout>

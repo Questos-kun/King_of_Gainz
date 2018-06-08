@@ -10,42 +10,64 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="291dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <Switch
             android:id="@+id/switchWorkout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Workout"
-            tools:layout_editor_absoluteX="106dp"
-            tools:layout_editor_absoluteY="34dp"
             android:textColor="@color/colorWhite"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:layout_margin="10dp"
+            android:switchPadding="10dp"/>
 
-        <!--<LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/switchWorkout">-->
+            app:layout_constraintTop_toBottomOf="@+id/switchWorkout"
+            android:layout_marginLeft="10dp">
 
-        <EditText
-            android:id="@+id/txtMealWorkout"
-            android:layout_width="match_parent"
+
+            <EditText
+                android:id="@+id/txtMealWorkout"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorWhite"
+                android:ems="10"
+                android:inputType="text"
+                android:textColor="@color/colorWhite" />
+
+            <Button
+                android:id="@+id/btnSubmitActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="20dp"
+                android:background="@color/limeGreen"
+                android:onClick="sendRequestToApi"
+                android:text="@string/submit"
+                android:textColor="@color/colorBackground" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtCurrentDate"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:backgroundTint="@color/colorWhite"
-            android:textColor="@color/colorWhite"/>
-        <!--</LinearLayout>-->
+            android:text="Activities for the "
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="18sp"/>
 
         <ListView
             android:id="@+id/listMealsWorkouts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp" >
+        </ListView>
 
     </LinearLayout>
 

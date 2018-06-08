@@ -10,15 +10,14 @@ public class MainActivity extends AppCompatActivity {
 
     private MySQLiteOpenHelper mySQLiteHelper;
     private boolean isProfileSetUp = false;
+    private Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        //TODO : check if profile has been set up
         mySQLiteHelper = new MySQLiteOpenHelper(this,
                 MySQLiteOpenHelper.DATABASE_NAME, null,1);
 
@@ -26,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(isProfileSetUp) {
             setContentView(R.layout.activity_main);
+            profile = mySQLiteHelper.getProfile();
         } else {
             //CHANGE ACTIVITY TO SET UP PROFILE
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
@@ -37,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void addMealOrActivity(View view) {
         Intent intent = new Intent(MainActivity.this, AddMealWorkoutActivity.class);
+        intent.putExtra("gender", profile.getSex());
+        intent.putExtra("weight", profile.getWeight());
+        intent.putExtra("height", profile.getHeight());
+        intent.putExtra("age", profile.getAge());
         startActivity(intent);
     }
 
