@@ -125,6 +125,7 @@ public class AddMealWorkoutActivity extends AppCompatActivity {
         }
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
+
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiEndPoint, postParams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -138,6 +139,7 @@ public class AddMealWorkoutActivity extends AppCompatActivity {
                 System.out.println(error.toString());
             }
         }) {
+            @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String,String> headers = new HashMap();
                 headers.put("Content-Type", "application/json");

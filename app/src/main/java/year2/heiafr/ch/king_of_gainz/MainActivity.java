@@ -1,6 +1,9 @@
 package year2.heiafr.ch.king_of_gainz;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,21 +21,25 @@ public class MainActivity extends AppCompatActivity {
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        mySQLiteHelper = new MySQLiteOpenHelper(this,
-                MySQLiteOpenHelper.DATABASE_NAME, null,1);
+        if(checkSelfPermission(Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+            mySQLiteHelper = new MySQLiteOpenHelper(this,
+                    MySQLiteOpenHelper.DATABASE_NAME, null,1);
 
-        isProfileSetUp = mySQLiteHelper.isProfileSetUp();
+            isProfileSetUp = mySQLiteHelper.isProfileSetUp();
 
-        if(isProfileSetUp) {
-            setContentView(R.layout.activity_main);
-            profile = mySQLiteHelper.getProfile();
+            if(isProfileSetUp) {
+                setContentView(R.layout.activity_main);
+                profile = mySQLiteHelper.getProfile();
+            } else {
+                //CHANGE ACTIVITY TO SET UP PROFILE
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("MODE", 1);
+                startActivity(intent);
+            }
         } else {
-            //CHANGE ACTIVITY TO SET UP PROFILE
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            intent.putExtra("MODE", 1);
-            startActivity(intent);
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.INTERNET}, 0);
         }
-
     }
 
     public void addMealOrActivity(View view) {
