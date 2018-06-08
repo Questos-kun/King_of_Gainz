@@ -13,6 +13,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -110,7 +111,7 @@ public class AddMealWorkoutActivity extends AppCompatActivity {
         }
 
         //SET REQUEST PARAMETERS
-        String request = txtMealWorkout.getText().toString();
+        final String request = txtMealWorkout.getText().toString();
         JSONObject postParams = new JSONObject();
         try {
             postParams.put(QUERY_PARAMETER, request);
@@ -124,29 +125,48 @@ public class AddMealWorkoutActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiEndPoint, postParams, new Response.Listener<JSONObject>() {
+        //Request response listener
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 //TODO : check if response is correct => put into list and refresh list
                 System.out.println(response);
             }
-        }, new Response.ErrorListener() {
+        };
+
+        //Request error listener
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getBaseContext(), "Could not process meal / workout", Toast.LENGTH_LONG).show();
-                System.out.println(error.toString());
+                String jsonError = new String(error.networkResponse.data);
+                System.out.println(jsonError);
             }
-        }) {
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiEndPoint, postParams, responseListener, errorListener) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap();
-                headers.put("Content-Type", "application/json");
+            public Map<String, String> getHeaders() {
+                HashMap<String,String> headers = new HashMap<String,String>();
+                headers.put("content-type", "application/json");
                 headers.put("x-app-id", APPLICATION_ID);
                 headers.put("x-app-key", APPLICATION_KEY);
+                headers.put("x-remote-user-id", "0");
                 return headers;
             }
+            /*@Override
+            public byte[] getBody() {
+                HashMap<String, String> params2 = new HashMap<String, String>();
+                params2.put("query", request);
+                return new JSONObject(params2).toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }*/
         };
         requestQueue.add(jsonObjReq);
     }
