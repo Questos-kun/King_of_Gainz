@@ -30,8 +30,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+    import org.json.JSONException;
+    import org.json.JSONObject;
+    import org.json.*;
 
 /**
  * Created by samue on 07.06.2018.
@@ -112,18 +113,21 @@ public class AddMealWorkoutActivity extends AppCompatActivity {
 
         //SET REQUEST PARAMETERS
         final String request = txtMealWorkout.getText().toString();
-        JSONObject postParams = new JSONObject();
-        try {
-            postParams.put(QUERY_PARAMETER, request);
+        Map<String, Object> jsonValues = new HashMap<>();
+        JSONObject postParams;
+       // try {
+            jsonValues.put(QUERY_PARAMETER, request);
             if(isWorkout) {
-                postParams.put(WORKOUT_GENDER_PARAMETER, gender);
-                postParams.put(WORKOUT_WEIGHT_PARAMETER, weight);
-                postParams.put(WORKOUT_HEIGHT_PARAMETER, height);
-                postParams.put(WORKOUT_AGE_PARAMETER, age);
+                jsonValues.put(WORKOUT_GENDER_PARAMETER, gender);
+                jsonValues.put(WORKOUT_WEIGHT_PARAMETER, weight);
+                jsonValues.put(WORKOUT_HEIGHT_PARAMETER, height);
+                jsonValues.put(WORKOUT_AGE_PARAMETER, age);
             }
-        } catch (JSONException e) {
+            postParams = new JSONObject(jsonValues);
+       /* } catch (JSONException e) {
             e.printStackTrace();
         }
+        */
 
         //Request response listener
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
@@ -131,6 +135,20 @@ public class AddMealWorkoutActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 //TODO : check if response is correct => put into list and refresh list
                 System.out.println(response);
+                try {
+                    mySQLiteHelper.addActivity(
+                            response.getString("date"),
+                            response.getString("type"),
+                            response.getString("name"),
+                            response.getString("quantity"),
+                            response.getInt("calories"),
+                            response.getDouble("fat"),
+                            response.getDouble("protein"),
+                            response.getDouble("carbohydrate")
+                            );
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
             }
         };
 

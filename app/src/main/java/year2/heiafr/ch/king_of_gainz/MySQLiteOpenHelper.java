@@ -153,5 +153,18 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         cursor.close();
         return activitiesForTheDay;
     }
+
+    public void addActivity(String date, String type, String name, String quantity,  int calories, double fat, double protein, double carbohydrates) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(ACTIVITY_KEY_DATE_COLUMN, date);
+        newValues.put(ACTIVITY_KEY_TYPE_COLUMN, type);
+        newValues.put(ACTIVITY_KEY_NAME_COLUMN, name);
+        newValues.put(ACTIVITY_KEY_QUANTITY_COLUMN, quantity);
+        newValues.put(ACTIVITY_KEY_CALORIES_COLUMN, calories);
+        newValues.put(ACTIVITY_KEY_FAT_COLUMN, fat);
+        newValues.put(ACTIVITY_KEY_PROTEIN_COLUMN, protein);
+        newValues.put(ACTIVITY_KEY_CARBOHYDRATE_COLUMN, carbohydrates);
+        db.insert(ACTIVITY_TABLE_NAME, null, newValues);
+    }
 }
 
