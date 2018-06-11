@@ -13,6 +13,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,10 +31,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-    import org.json.JSONException;
-    import org.json.JSONObject;
-    import org.json.*;
-
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.*;
+import okhttp3.*;
 /**
  * Created by samue on 07.06.2018.
  */
@@ -124,68 +125,48 @@ public class AddMealWorkoutActivity extends AppCompatActivity {
                 jsonValues.put(WORKOUT_AGE_PARAMETER, age);
             }
             postParams = new JSONObject(jsonValues);
-       /* } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        */
 
-        //Request response listener
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                //TODO : check if response is correct => put into list and refresh list
-                System.out.println(response);
-                try {
-                    mySQLiteHelper.addActivity(
-                            response.getString("date"),
-                            response.getString("type"),
-                            response.getString("name"),
-                            response.getString("quantity"),
-                            response.getInt("calories"),
-                            response.getDouble("fat"),
-                            response.getDouble("protein"),
-                            response.getDouble("carbohydrate")
-                            );
-                }catch (JSONException e){
+
+
+        try {
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            OkHttpClient client = new OkHttpClient();
+
+            okhttp3.RequestBody body = RequestBody.create(JSON, postParams.toString());
+            okhttp3.Request query = new okhttp3.Request.Builder()
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("x-app-id", APPLICATION_ID)
+                    .addHeader("x-app-key", APPLICATION_KEY)
+                    .url(apiEndPoint)
+                    .post(body)
+                    .build();
+            System.out.println("-------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------");
+            System.out.println("SENDING REQUEST : "+postParams.toString());
+            System.out.println("-------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------");
+            client.newCall(query).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
                     e.printStackTrace();
                 }
-            }
-        };
 
-        //Request error listener
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getBaseContext(), "Could not process meal / workout", Toast.LENGTH_LONG).show();
-                String jsonError = new String(error.networkResponse.data);
-                System.out.println(jsonError);
-            }
-        };
+                @Override
+                public void onResponse(Call call, final okhttp3.Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Unexpected code " + response);
+                    }
+                    try {
+                        JSONObject res = new JSONObject(response.body().string());
+                        System.out.println(res.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiEndPoint, postParams, responseListener, errorListener) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String,String> headers = new HashMap<String,String>();
-                headers.put("content-type", "application/json");
-                headers.put("x-app-id", APPLICATION_ID);
-                headers.put("x-app-key", APPLICATION_KEY);
-                headers.put("x-remote-user-id", "0");
-                return headers;
-            }
-            /*@Override
-            public byte[] getBody() {
-                HashMap<String, String> params2 = new HashMap<String, String>();
-                params2.put("query", request);
-                return new JSONObject(params2).toString().getBytes();
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }*/
-        };
-        requestQueue.add(jsonObjReq);
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
